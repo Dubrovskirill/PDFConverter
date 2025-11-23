@@ -7,6 +7,8 @@ CONFIG += qt warn_on
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        ImageService.cpp \
+        ImageServiceTest.cpp \
         StorageService.cpp \
         StorageServiceTest.cpp \
         main.cpp
@@ -26,6 +28,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     AppConfig.h \
+    ImageService.h \
+    ImageServiceTest.h \
     Logger.h \
     StorageService.h \
     StorageServiceTest.h

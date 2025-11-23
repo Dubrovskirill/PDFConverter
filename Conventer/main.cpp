@@ -5,9 +5,9 @@
 
 
 #include <QtTest>
-#include "StorageServiceTest.h"
 
-QTEST_MAIN(StorageServiceTest)
+#include "ImageServiceTest.h"
+QTEST_MAIN(ImageServiceTest)
 
 //int main(int argc, char *argv[])
 //{
