@@ -9,6 +9,8 @@ CONFIG += qt warn_on
 SOURCES += \
         ImageService.cpp \
         ImageServiceTest.cpp \
+        PdfWriter.cpp \
+        PdfWriterTest.cpp \
         StorageService.cpp \
         StorageServiceTest.cpp \
         main.cpp
@@ -31,5 +33,7 @@ HEADERS += \
     ImageService.h \
     ImageServiceTest.h \
     Logger.h \
+    PdfWriter.h \
+    PdfWriterTest.h \
     StorageService.h \
     StorageServiceTest.h
