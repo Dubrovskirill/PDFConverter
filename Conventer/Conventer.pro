@@ -30,6 +30,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     AppConfig.h \
+    IDocEngine.h \
+    IPdfEngine.h \
     ImageService.h \
     ImageServiceTest.h \
     Logger.h \
