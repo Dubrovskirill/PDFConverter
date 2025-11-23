@@ -41,10 +41,22 @@ bool PdfWriter::endDocument()
     QPdfWriter writer (m_pdfPath);
     QPainter painter(&writer);
 
-    for (const QImage& img: m_images) {
-        painter.drawImage(0,0,img);
-        writer.newPage();
+    QSize pageSize(writer.width(), writer.height());
+    for (int i = 0; i < m_images.size(); ++i) {
+        const QImage& img = m_images[i];
+
+        QImage scaled = img.scaled(pageSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+
+        int x = (pageSize.width() - scaled.width()) / 2;
+        int y = (pageSize.height() - scaled.height()) / 2;
+        painter.drawImage(x, y, scaled);
+
+        if (i != m_images.size() - 1) {
+            writer.newPage();
+        }
     }
+
 
     painter.end();
     m_images.clear();
