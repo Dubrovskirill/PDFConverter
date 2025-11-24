@@ -5,50 +5,16 @@
 
 
 #include <QtTest>
-
-//#include "PdfWriterTest.h"
-//QTEST_MAIN(PdfWriterTest)
 #include <QCoreApplication>
-#include "PdfWriter.h"
 #include <QImage>
+#include <QGuiApplication>
 #include <QDebug>
+//#include "PdfWriter_SpecificImagesTest.h"
+//QTEST_MAIN(PdfWriter_SpecificImagesTest)
+#include "PdfEngine_Poppler_RenderSpecificFileTest.h"
+QTEST_MAIN(PdfEngine_Poppler_RenderSpecificFileTest)
 
-int main(int argc, char *argv[])
-{
-    QCoreApplication a(argc, argv);
 
-    PdfWriter writer;
-
-    // Сохраним PDF в папку "Документы" пользователя
-    QString pdfPath = "C:/Users/Кирилл/Documents/MyPdfFromImages.pdf";
-
-    if (!writer.beginDocument(pdfPath)) {
-        qWarning() << "Failed to start PDF document";
-        return -1;
-    }
-
-    // Пути к твоим изображениям
-    QStringList images = {
-                          "C:/Users/Кирилл/OneDrive/Документы/ShareX/Screenshots/2025-11/TaskTracker_0Xh0dgn6WJ.png",
-                          "C:/Users/Кирилл/OneDrive/Документы/ShareX/Screenshots/2025-11/vmware_1hK6eyfUC4.png",
-                          "C:/Users/Кирилл/OneDrive/Документы/ShareX/Screenshots/2025-11/PrintGraphs_rw7WgGMu3M.png"
-    };
-
-    for (const QString &path : images) {
-        QImage img(path);
-        if (!writer.addImage(img)) {
-            qWarning() << "Failed to add image:" << path;
-        }
-    }
-
-    if (!writer.endDocument()) {
-        qWarning() << "Failed to save PDF";
-        return -1;
-    }
-
-    qDebug() << "PDF successfully saved to:" << pdfPath;
-    return 0;
-}
 
 //int main(int argc, char *argv[])
 //{

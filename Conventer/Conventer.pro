@@ -2,6 +2,9 @@ QT += quick
 QT += testlib
 CONFIG += qt warn_on
 
+INCLUDEPATH += C:/msys64/mingw64/include/poppler/qt5
+LIBS += -LC:/msys64/mingw64/lib -lpoppler-qt5
+
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
@@ -9,6 +12,7 @@ CONFIG += qt warn_on
 SOURCES += \
         ImageService.cpp \
         ImageServiceTest.cpp \
+        PdfEngine_Poppler.cpp \
         PdfWriter.cpp \
         PdfWriterTest.cpp \
         StorageService.cpp \
@@ -35,7 +39,10 @@ HEADERS += \
     ImageService.h \
     ImageServiceTest.h \
     Logger.h \
+    PdfEngine_Poppler.h \
+    PdfEngine_Poppler_RenderSpecificFileTest.h \
     PdfWriter.h \
     PdfWriterTest.h \
+    PdfWriter_SpecificImagesTest.h \
     StorageService.h \
     StorageServiceTest.h
