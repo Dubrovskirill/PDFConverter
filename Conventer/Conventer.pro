@@ -14,7 +14,9 @@ LIBS += -LC:/msys64/mingw64/lib -lqpdf
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        ConvertDocToPdfCommand.cpp \
         ConvertImageToPdfCommand.cpp \
+        ConverterFacade.cpp \
         ExtractPdfPageCommand.cpp \
         ImageService.cpp \
         LibreOfficeDocEngine.cpp \
@@ -43,7 +45,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     AppConfig.h \
+    ConvertDocToPdfCommand.h \
     ConvertImageToPdfCommand.h \
+    ConverterFacade.h \
     ExtractPdfPageCommand.h \
     IConverterCommand.h \
     IDocEngine.h \
