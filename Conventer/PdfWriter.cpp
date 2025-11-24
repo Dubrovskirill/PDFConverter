@@ -1,5 +1,4 @@
 #include "PdfWriter.h"
-#include "qdebug.h"
 #include <QPdfWriter>
 #include <QPainter>
 #include <QDebug>

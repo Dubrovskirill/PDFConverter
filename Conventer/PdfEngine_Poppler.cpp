@@ -1,4 +1,13 @@
+#include <QPdfWriter>
+#include <QPainter>
+#include <QDebug>
+
+#include <qpdf/QPDF.hh>
+#include <qpdf/QPDFWriter.hh>
+#include <qpdf/QPDFPageDocumentHelper.hh>
+
 #include "PdfEngine_Poppler.h"
+#include "PdfWriter.h"
 
 PdfEngine_Poppler::PdfEngine_Poppler()
 {
@@ -35,15 +44,45 @@ QImage PdfEngine_Poppler::renderPageToImage(int pageIndex, int dpi)
     if (!page)
         return QImage();
 
-    // Рендер в QImage
+
     QImage image = page->renderToImage(dpi, dpi);
 
     delete page;
     return image;
 }
 
-bool PdfEngine_Poppler::mergeDocuments(const QStringList&, const QString&)
+bool PdfEngine_Poppler::mergeDocuments(const QStringList& paths, const QString& outputPath)
 {
-    // Пока заглушка — реализация будет позже
-    return false;
+    if (paths.isEmpty())
+        return false;
+
+    try {
+        QPDF outPdf;
+        outPdf.emptyPDF();
+
+        QPDFPageDocumentHelper outPages(outPdf);
+
+        for (const QString& path : paths) {
+            QPDF pdf;
+            pdf.processFile(path.toStdString().c_str());
+
+            QPDFPageDocumentHelper srcPages(pdf);
+            std::vector<QPDFPageObjectHelper> pages = srcPages.getAllPages();
+
+
+            for (auto& pageHelper : pages) {
+                QPDFObjectHandle pageObj = pageHelper.getObjectHandle();
+                outPages.addPage(pageObj, false);
+            }
+        }
+
+        QPDFWriter writer(outPdf, outputPath.toStdString().c_str());
+        writer.write();
+
+        return true;
+    }
+    catch (const std::exception& e) {
+        qWarning() << "QPDF merge error:" << e.what();
+        return false;
+    }
 }

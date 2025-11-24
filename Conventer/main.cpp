@@ -11,8 +11,8 @@
 #include <QDebug>
 //#include "PdfWriter_SpecificImagesTest.h"
 //QTEST_MAIN(PdfWriter_SpecificImagesTest)
-#include "PdfEngine_Poppler_RenderSpecificFileTest.h"
-QTEST_MAIN(PdfEngine_Poppler_RenderSpecificFileTest)
+#include "PdfEngine_Poppler_MergeSpecificTest.h"
+QTEST_MAIN(PdfEngine_Poppler_MergeSpecificTest)
 
 
 

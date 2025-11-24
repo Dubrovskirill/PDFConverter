@@ -1,9 +1,13 @@
 QT += quick
 QT += testlib
 CONFIG += qt warn_on
+CONFIG += c++17
 
 INCLUDEPATH += C:/msys64/mingw64/include/poppler/qt5
 LIBS += -LC:/msys64/mingw64/lib -lpoppler-qt5
+INCLUDEPATH += C:/msys64/mingw64/include
+LIBS += -LC:/msys64/mingw64/lib -lqpdf
+
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -40,6 +44,7 @@ HEADERS += \
     ImageServiceTest.h \
     Logger.h \
     PdfEngine_Poppler.h \
+    PdfEngine_Poppler_MergeSpecificTest.h \
     PdfEngine_Poppler_RenderSpecificFileTest.h \
     PdfWriter.h \
     PdfWriterTest.h \
