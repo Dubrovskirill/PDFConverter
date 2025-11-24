@@ -16,6 +16,7 @@ LIBS += -LC:/msys64/mingw64/lib -lqpdf
 SOURCES += \
         ConvertImageToPdfCommand.cpp \
         ImageService.cpp \
+        MergeFilesCommand.cpp \
         PdfEngine_Poppler.cpp \
         PdfWriter.cpp \
         StorageService.cpp \
@@ -46,12 +47,14 @@ HEADERS += \
     IPdfEngine.h \
     ImageService.h \
     Logger.h \
+    MergeFilesCommand.h \
     PdfEngine_Poppler.h \
     PdfWriter.h \
     PdfWriterTest.h \
     StorageService.h \
     tests/ConvertImageToPdfCommandTest.h \
     tests/ImageServiceTest.h \
+    tests/MergeFilesCommand_SpecificTest.h \
     tests/PdfEngine_Poppler_MergeSpecificTest.h \
     tests/PdfEngine_Poppler_RenderSpecificFileTest.h \
     tests/PdfWriterTest.h \
