@@ -61,6 +61,7 @@ HEADERS += \
     PdfWriterTest.h \
     StorageService.h \
     tests/ConvertImageToPdfCommandTest.h \
+    tests/ConverterFacadeTest.h \
     tests/ExtractPdfPageCommandTest.h \
     tests/ImageServiceTest.h \
     tests/LibreOfficeDocEngine_ConverterTest.h \
