@@ -14,11 +14,13 @@ LIBS += -LC:/msys64/mingw64/lib -lqpdf
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        ConvertImageToPdfCommand.cpp \
         ImageService.cpp \
         PdfEngine_Poppler.cpp \
         PdfWriter.cpp \
         StorageService.cpp \
         main.cpp \
+        tests/ConvertImageToPdfCommandTest.cpp \
         tests/ImageServiceTest.cpp \
         tests/PdfWriterTest.cpp \
         tests/StorageServiceTest.cpp
@@ -38,6 +40,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     AppConfig.h \
+    ConvertImageToPdfCommand.h \
     IConverterCommand.h \
     IDocEngine.h \
     IPdfEngine.h \
@@ -47,6 +50,7 @@ HEADERS += \
     PdfWriter.h \
     PdfWriterTest.h \
     StorageService.h \
+    tests/ConvertImageToPdfCommandTest.h \
     tests/ImageServiceTest.h \
     tests/PdfEngine_Poppler_MergeSpecificTest.h \
     tests/PdfEngine_Poppler_RenderSpecificFileTest.h \

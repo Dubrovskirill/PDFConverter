@@ -11,8 +11,10 @@
 #include <QDebug>
 //#include "PdfWriter_SpecificImagesTest.h"
 //QTEST_MAIN(PdfWriter_SpecificImagesTest)
-#include "PdfEngine_Poppler_MergeSpecificTest.h"
-QTEST_MAIN(PdfEngine_Poppler_MergeSpecificTest)
+
+#include "tests/ConvertImageToPdfCommandTest.h"
+QTEST_MAIN(ConvertImageToPdfCommandTest)
+
 
 
 
