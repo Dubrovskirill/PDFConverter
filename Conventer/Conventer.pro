@@ -15,13 +15,13 @@ LIBS += -LC:/msys64/mingw64/lib -lqpdf
 
 SOURCES += \
         ImageService.cpp \
-        ImageServiceTest.cpp \
         PdfEngine_Poppler.cpp \
         PdfWriter.cpp \
-        PdfWriterTest.cpp \
         StorageService.cpp \
-        StorageServiceTest.cpp \
-        main.cpp
+        main.cpp \
+        tests/ImageServiceTest.cpp \
+        tests/PdfWriterTest.cpp \
+        tests/StorageServiceTest.cpp
 
 RESOURCES += qml.qrc
 
@@ -38,16 +38,18 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     AppConfig.h \
+    IConverterCommand.h \
     IDocEngine.h \
     IPdfEngine.h \
     ImageService.h \
-    ImageServiceTest.h \
     Logger.h \
     PdfEngine_Poppler.h \
-    PdfEngine_Poppler_MergeSpecificTest.h \
-    PdfEngine_Poppler_RenderSpecificFileTest.h \
     PdfWriter.h \
     PdfWriterTest.h \
-    PdfWriter_SpecificImagesTest.h \
     StorageService.h \
-    StorageServiceTest.h
+    tests/ImageServiceTest.h \
+    tests/PdfEngine_Poppler_MergeSpecificTest.h \
+    tests/PdfEngine_Poppler_RenderSpecificFileTest.h \
+    tests/PdfWriterTest.h \
+    tests/PdfWriter_SpecificImagesTest.h \
+    tests/StorageServiceTest.h
