@@ -15,6 +15,7 @@ LIBS += -LC:/msys64/mingw64/lib -lqpdf
 
 SOURCES += \
         ConvertImageToPdfCommand.cpp \
+        ExtractPdfPageCommand.cpp \
         ImageService.cpp \
         MergeFilesCommand.cpp \
         PdfEngine_Poppler.cpp \
@@ -42,6 +43,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     AppConfig.h \
     ConvertImageToPdfCommand.h \
+    ExtractPdfPageCommand.h \
     IConverterCommand.h \
     IDocEngine.h \
     IPdfEngine.h \
@@ -53,6 +55,7 @@ HEADERS += \
     PdfWriterTest.h \
     StorageService.h \
     tests/ConvertImageToPdfCommandTest.h \
+    tests/ExtractPdfPageCommandTest.h \
     tests/ImageServiceTest.h \
     tests/MergeFilesCommand_SpecificTest.h \
     tests/PdfEngine_Poppler_MergeSpecificTest.h \

@@ -12,8 +12,8 @@
 //#include "PdfWriter_SpecificImagesTest.h"
 //QTEST_MAIN(PdfWriter_SpecificImagesTest)
 
-#include "tests/MergeFilesCommand_SpecificTest.h"
-QTEST_MAIN(MergeFilesCommand_SpecificTest)
+#include "tests/ExtractPdfPageCommandTest.h"
+QTEST_MAIN(ExtractPdfPageCommandTest)
 
 
 
