@@ -4,6 +4,7 @@
 #include <QtTest>
 #include "../MergeFilesCommand.h"
 #include "../PdfEngine_Poppler.h"
+#include "../LibreOfficeDocEngine.h"
 #include <poppler-qt5.h>
 #include <QFile>
 #include <QDir>
@@ -15,24 +16,27 @@ class MergeFilesCommand_SpecificTest : public QObject
 private slots:
     void testMergeMixedFiles()
     {
-        // Список смешанных файлов (PNG + PDF + PNG)
+        // Список смешанных файлов (PNG + PDF + DOCX + PNG)
         QStringList files = {
                              "C:/Users/Кирилл/Downloads/3 этаж печать.jpg",
                              "D:/РезюмеБогданКС2025.pdf",
                              "C:/Users/Кирилл/Downloads/Лого 1.png",
                              "C:/Users/Кирилл/Downloads/олега режет.png",
+                             "D:/Учеба/курсовая/Идент (1).docx", // DOCX файл
                              "C:/Users/Кирилл/OneDrive/Pictures/Roblox/RobloxScreenShot20251019_103049833.png",
                              "D:/Учеба/4 курс/Верификация программ/Лекция1_2019.pdf",
                              "C:/Users/Кирилл/OneDrive/Документы/ShareX/Screenshots/2025-11/ZMCptmrnlA.png"
-    };
+        };
 
         // Итоговый PDF в папке билда
         QString outPdf = QDir::currentPath() + "/merged_specific_mixed.pdf";
 
-        // Создаём PdfEngine_Poppler для mergeDocuments
-        PdfEngine_Poppler engine;
+        // Создаём движки
+        PdfEngine_Poppler pdfEngine;
+        LibreOfficeDocEngine docEngine; // передаем реализацию IDocEngine
 
-        MergeFilesCommand cmd(files, outPdf, &engine);
+        // Создаём команду с переданным LibreOfficeDocEngine
+        MergeFilesCommand cmd(files, outPdf, &pdfEngine, &docEngine);
 
         // Выполняем команду
         bool ok = cmd.execute();
@@ -45,23 +49,20 @@ private slots:
         std::unique_ptr<Poppler::Document> doc(Poppler::Document::load(outPdf));
         QVERIFY(doc != nullptr);
 
-        // Минимальная проверка: PDF должен иметь хотя бы столько страниц, сколько исходных PDF + PNG
-        // PNG превращаются в 1 страницу каждая, PDF добавляются целиком
+        // Минимальная проверка: PDF должен иметь хотя бы столько страниц, сколько исходных PDF + PNG + DOCX
         int expectedMinPages = 0;
         for (const QString& f : files) {
             QString suf = QFileInfo(f).suffix().toLower();
             if (suf == "pdf") {
                 std::unique_ptr<Poppler::Document> d(Poppler::Document::load(f));
                 if (d) expectedMinPages += d->numPages();
-            } else if (suf == "png" || suf == "jpg" || suf == "jpeg") {
-                expectedMinPages += 1;
+            } else if (suf == "png" || suf == "jpg" || suf == "jpeg" || suf == "doc" || suf == "docx") {
+                expectedMinPages += 1; // каждая картинка и DOCX конвертируется в 1 страницу PDF
             }
         }
 
         QCOMPARE(doc->numPages(), expectedMinPages);
     }
 };
-
-
 
 #endif // MERGEFILESCOMMAND_SPECIFICTEST_H
