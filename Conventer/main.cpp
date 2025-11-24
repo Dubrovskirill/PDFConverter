@@ -12,8 +12,8 @@
 //#include "PdfWriter_SpecificImagesTest.h"
 //QTEST_MAIN(PdfWriter_SpecificImagesTest)
 
-#include "tests/ExtractPdfPageCommandTest.h"
-QTEST_MAIN(ExtractPdfPageCommandTest)
+#include "tests/LibreOfficeDocEngine_ConverterTest.h"
+QTEST_MAIN(LibreOfficeDocEngine_ConverterTest)
 
 
 
