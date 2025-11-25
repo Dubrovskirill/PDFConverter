@@ -19,6 +19,7 @@ SOURCES += \
         ConverterFacade.cpp \
         ExtractPdfPageCommand.cpp \
         ImageService.cpp \
+        JobQueue.cpp \
         LibreOfficeDocEngine.cpp \
         MergeFilesCommand.cpp \
         PdfEngine_Poppler.cpp \
@@ -53,6 +54,7 @@ HEADERS += \
     IDocEngine.h \
     IPdfEngine.h \
     ImageService.h \
+    JobQueue.h \
     LibreOfficeDocEngine.h \
     Logger.h \
     MergeFilesCommand.h \
@@ -61,6 +63,7 @@ HEADERS += \
     PdfWriterTest.h \
     StorageService.h \
     tests/ConvertImageToPdfCommandTest.h \
+    tests/ConverterFacadeJobTest.h \
     tests/ConverterFacadeTest.h \
     tests/ExtractPdfPageCommandTest.h \
     tests/ImageServiceTest.h \

@@ -12,8 +12,8 @@
 //#include "PdfWriter_SpecificImagesTest.h"
 //QTEST_MAIN(PdfWriter_SpecificImagesTest)
 
-#include "tests/ConverterFacadeTest.h"
-QTEST_MAIN(ConverterFacadeTest)
+#include "tests/ConverterFacadeJobTest.h"
+QTEST_MAIN(ConverterFacadeJobTest)
 
 
 
