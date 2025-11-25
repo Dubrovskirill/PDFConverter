@@ -25,6 +25,7 @@ SOURCES += \
         MergeFilesCommand.cpp \
         PdfEngine_Poppler.cpp \
         PdfWriter.cpp \
+        StorageService.cpp \
         main.cpp \
         tests/ConvertImageToPdfCommandTest.cpp \
         tests/ImageServiceTest.cpp \
@@ -58,6 +59,7 @@ HEADERS += \
     MergeFilesCommand.h \
     PdfEngine_Poppler.h \
     PdfWriter.h \
+        StorageService.h \
     PdfWriterTest.h \
     tests/ConvertImageToPdfCommandTest.h \
     tests/ConverterFacadeJobTest.h \

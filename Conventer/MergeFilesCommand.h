@@ -10,6 +10,8 @@
 #include <QStringList>
 #include <QObject>
 
+class StorageService;
+
 
 class MergeFilesCommand : public IConverterCommand
 {
@@ -21,6 +23,7 @@ public:
                       const QString& outputPdf,
                       IPdfEngine* pdfEngine,
                       IDocEngine* docEngine = nullptr,
+                      StorageService* storage = nullptr,
                       QObject* parent = nullptr);
 
     bool execute() override;
@@ -30,6 +33,7 @@ private:
     QString m_outputPdf;
     IPdfEngine* m_pdfEngine;
     IDocEngine* m_docEngine;
+    StorageService* m_storage;
 };
 
 #endif // MERGEFILESCOMMAND_H

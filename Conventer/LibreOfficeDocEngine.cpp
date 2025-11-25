@@ -1,5 +1,6 @@
 #include "LibreOfficeDocEngine.h"
 #include <QProcess>
+#include <QTemporaryDir>
 #include <QFileInfo>
 #include <QDebug>
 
@@ -37,7 +38,14 @@ bool LibreOfficeDocEngine::convertToPdf(const QString& inputPath,
     QFileInfo inputInfo(inputPath);
     QFileInfo outputInfo(outputPdfPath);
 
-    QString outputDir = outputInfo.absolutePath();
+    // Создадим временную директорию для вывода LibreOffice, чтобы избежать мусора в целевом каталоге
+    QTemporaryDir tmpOutDir; // tmp директория уничтожится в конце области видимости
+    QString outputDir;
+    if (tmpOutDir.isValid()) {
+        outputDir = tmpOutDir.path(); // используем временную директорию
+    } else {
+        outputDir = outputInfo.absolutePath(); // fallback на директорию назначения
+    }
     QString outputNameNoExt = outputInfo.completeBaseName();
 
     // Команда LibreOffice:
@@ -56,7 +64,12 @@ bool LibreOfficeDocEngine::convertToPdf(const QString& inputPath,
         return false;
     }
 
-    process.waitForFinished(30000); // 30 seconds timeout
+    if (!process.waitForFinished(30000)) { // 30 seconds timeout
+        process.kill(); // убиваем процесс при таймауте
+        process.waitForFinished(5000); // ждём завершения убийства
+        qWarning() << "LibreOffice conversion timed out"; // сообщение об ошибке
+        return false; // завершаем с ошибкой
+    }
 
     // LibreOffice создаёт PDF с именем входного файла → нужно переименовать
     QString generatedPdf =
@@ -67,9 +80,18 @@ bool LibreOfficeDocEngine::convertToPdf(const QString& inputPath,
         return false;
     }
 
-    // Переименовываем в то имя, которое запросил пользователь
+    // Переименовываем файл в то имя, которое запросил пользователь
     QFile::remove(outputPdfPath);
-    QFile::rename(generatedPdf, outputPdfPath);
+    if (!QFile::rename(generatedPdf, outputPdfPath)) { // если rename не сработал
+        // Попробуем скопировать в целевой путь и удалить исходный, иначе подчистим temp
+        if (!QFile::copy(generatedPdf, outputPdfPath)) {
+            qWarning() << "Failed to move generated PDF to target path" << generatedPdf << outputPdfPath; // сообщение об ошибке
+            QFile::remove(generatedPdf); // удаляем остаточный файл
+            return false;
+        }
+        QFile::remove(generatedPdf); // удалили временный файл после успешного копирования
+    }
 
-    return QFileInfo::exists(outputPdfPath);
+    // Если мы использовали temp-директорию, она будет автоматически удалена при выходе из области видимости
+    return QFileInfo::exists(outputPdfPath); // возвращаем факт наличия целевого файла
 }

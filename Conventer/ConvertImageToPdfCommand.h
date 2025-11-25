@@ -19,8 +19,8 @@ public slots:
     bool execute() override;
 
 private:
-    QStringList m_images;     // пути к изображениям, которые надо конвертировать
-    QString m_outputPdf;      // путь к итоговому pdf
+    QStringList m_images;
+    QString m_outputPdf;
 
 };
 
