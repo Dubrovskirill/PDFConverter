@@ -17,33 +17,58 @@ bool JobQueue::hasActiveJobs() const
 
 void JobQueue::enqueue(IConverterCommand* command)
 {
-    {
-        QMutexLocker lock(&m_mutex);
-        m_active.insert(command);
-    }
+    if (!command)
+        return;
 
     emit jobStarted(command);
 
-    QtConcurrent::run(&m_pool, [=]() {
-        bool success = false;
+    QMutexLocker lock(&m_mutex);
+    m_active.insert(command);
 
-        try {
-            success = command->execute();
-        }
-        catch (...) {
-            success = false;
-        }
+    auto watcher = new QFutureWatcher<bool>(this);
+    m_watchers.insert(command, watcher);
 
-        QMetaObject::invokeMethod(command, [=]() {
-            emit command->finished(success);
-        });
-
-        QMetaObject::invokeMethod(this, [=]() {
-            {
-                QMutexLocker lock(&m_mutex);
-                m_active.remove(command);
-            }
-            emit jobFinished(command, success);
-        });
+    auto future = QtConcurrent::run(&m_pool, [command]() {
+        return command->execute();
     });
+
+    watcher->setFuture(future);
+
+    connect(watcher, &QFutureWatcher<bool>::finished, this,
+            [this, command, watcher]() {
+
+                bool result = watcher->future().result();
+
+                {
+                    QMutexLocker lock(&m_mutex);
+                    m_active.remove(command);
+                    m_watchers.remove(command);
+                }
+
+                emit jobFinished(command, result);
+
+                watcher->deleteLater();
+                command->deleteLater();
+            });
+}
+
+void JobQueue::cancel(IConverterCommand* command)
+{
+    if (!command)
+        return;
+
+    QMutexLocker lock(&m_mutex);
+
+    if (!m_active.contains(command))
+        return;
+
+    command->cancel();
+}
+
+void JobQueue::cancelAll()
+{
+    QMutexLocker lock(&m_mutex);
+
+    for (IConverterCommand* cmd : m_active)
+        cmd->cancel();
 }

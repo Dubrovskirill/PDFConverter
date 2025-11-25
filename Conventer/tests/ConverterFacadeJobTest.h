@@ -105,6 +105,30 @@ private slots:
         QVERIFY(spy4.wait(60000));
         QVERIFY(spy4.takeFirst().at(0).toBool());
         QVERIFY(QFile::exists(extractedImage));
+
+        // -----------------------------
+        // 5. Cancel command test
+        // -----------------------------
+        QString outCancelled = QDir::currentPath() + "/should_not_exist.pdf";
+
+        auto* longCmd = new ConvertImageToPdfCommand(images, outCancelled);
+        QSignalSpy spyCancel(longCmd, SIGNAL(finished(bool)));
+
+        queue.enqueue(longCmd);
+
+        // Сразу отменяем
+        longCmd->cancel();
+
+        // Ждём завершения (команда должна сама корректно прерваться)
+        QVERIFY(spyCancel.wait(60000));
+
+        // Должен вернуться success == false
+        QVariant result = spyCancel.takeFirst().at(0);
+        QVERIFY(result.toBool() == false);
+
+        // Файл не должен создаться
+        QVERIFY(!QFile::exists(outCancelled));
+
     }
 };
 
