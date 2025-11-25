@@ -14,6 +14,7 @@ LIBS += -LC:/msys64/mingw64/lib -lqpdf
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        AppController.cpp \
         ConvertDocToPdfCommand.cpp \
         ConvertImageToPdfCommand.cpp \
         ConverterFacade.cpp \
@@ -24,12 +25,10 @@ SOURCES += \
         MergeFilesCommand.cpp \
         PdfEngine_Poppler.cpp \
         PdfWriter.cpp \
-        StorageService.cpp \
         main.cpp \
         tests/ConvertImageToPdfCommandTest.cpp \
         tests/ImageServiceTest.cpp \
-        tests/PdfWriterTest.cpp \
-        tests/StorageServiceTest.cpp
+        tests/PdfWriterTest.cpp
 
 RESOURCES += qml.qrc
 
@@ -45,7 +44,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    AppConfig.h \
+    AppController.h \
     ConvertDocToPdfCommand.h \
     ConvertImageToPdfCommand.h \
     ConverterFacade.h \
@@ -56,12 +55,10 @@ HEADERS += \
     ImageService.h \
     JobQueue.h \
     LibreOfficeDocEngine.h \
-    Logger.h \
     MergeFilesCommand.h \
     PdfEngine_Poppler.h \
     PdfWriter.h \
     PdfWriterTest.h \
-    StorageService.h \
     tests/ConvertImageToPdfCommandTest.h \
     tests/ConverterFacadeJobTest.h \
     tests/ConverterFacadeTest.h \
@@ -72,5 +69,4 @@ HEADERS += \
     tests/PdfEngine_Poppler_MergeSpecificTest.h \
     tests/PdfEngine_Poppler_RenderSpecificFileTest.h \
     tests/PdfWriterTest.h \
-    tests/PdfWriter_SpecificImagesTest.h \
-    tests/StorageServiceTest.h
+    tests/PdfWriter_SpecificImagesTest.h
