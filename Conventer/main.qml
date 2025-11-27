@@ -54,7 +54,7 @@ ApplicationWindow {
 
                 Rectangle {
                     width: 300; height: 80; color: "#3a7"; radius: 8
-                    MouseArea { anchors.fill: parent; onClicked: stack.push("qrc:/qml/ConvertMergePage.qml") }
+                    MouseArea { anchors.fill: parent; onClicked: stack.push("ConvertMergePage.qml") }
                     Text { anchors.centerIn: parent; text: "Конвертировать/объеденить в PDF" }
                 }
 
