@@ -26,12 +26,6 @@ ApplicationWindow {
                     if (stack.depth > 1) stack.pop()
                 }
             }
-
-            Text {
-                id: titleLabel
-                text: root.title
-                anchors.verticalCenter: parent.verticalCenter
-            }
         }
     }
 

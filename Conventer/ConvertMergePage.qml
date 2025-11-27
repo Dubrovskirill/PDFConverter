@@ -298,21 +298,21 @@ Page {
     }
 
     function startProcessing() {
-            var paths = getPathsInOrder()
-            if (paths.length === 0) { statusLabel.text = "Список файлов пуст"; return }
-            lastStartedPaths = paths
-            if (mergeCheckbox.checked) saveDialog.open()
-            else folderDialog.open()
-        }
+        var paths = getPathsInOrder()
+        if (paths.length === 0) { statusLabel.text = "Список файлов пуст"; return }
+        lastStartedPaths = paths
+        if (mergeCheckbox.checked) saveDialog.open()
+        else folderDialog.open()
+    }
 
-        property string pendingOutputTemp: ""
-        function startProcessingWithPath(outPath) {
-            pendingOutputTemp = outPath
-            lastOutputPath = outPath
-            var paths = getPathsInOrder()
-            if (mergeCheckbox.checked) appController.addFilesToQueue(paths, true, outPath)
-            else appController.addFilesToQueue(paths, false, outPath)
-            statusLabel.text = "Запущено..."
-        }
+    property string pendingOutputTemp: ""
+    function startProcessingWithPath(outPath) {
+        pendingOutputTemp = outPath
+        lastOutputPath = outPath
+        var paths = getPathsInOrder()
+        if (mergeCheckbox.checked) appController.addFilesToQueue(paths, true, outPath)
+        else appController.addFilesToQueue(paths, false, outPath)
+        statusLabel.text = "Запущено..."
+    }
 
 }

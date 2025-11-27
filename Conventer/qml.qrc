@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>ConvertMergePage.qml</file>
+        <file>icons/pdf_icon.png</file>
+        <file>icons/doc_icon.png</file>
+        <file>icons/image_icon.png</file>
     </qresource>
 </RCC>
