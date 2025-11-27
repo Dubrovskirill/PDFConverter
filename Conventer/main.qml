@@ -8,9 +8,40 @@ ApplicationWindow {
     visible: true
     title: qsTr("PDF Converter")
 
+
+    ToolBar {
+        id: topBar
+        anchors.top: parent.top
+        width: parent.width
+
+        Row {
+            anchors.fill: parent
+            spacing: 12
+
+            Button {
+                id: backButton
+                text: "< Назад"
+                visible: stack.depth > 1
+                onClicked: {
+                    if (stack.depth > 1) stack.pop()
+                }
+            }
+
+            Text {
+                id: titleLabel
+                text: root.title
+                anchors.verticalCenter: parent.verticalCenter
+            }
+        }
+    }
+
+
     StackView {
         id: stack
-        anchors.fill: parent
+        anchors.top: topBar.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
         initialItem: mainPage
     }
 
@@ -36,4 +67,3 @@ ApplicationWindow {
         }
     }
 }
-
