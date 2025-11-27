@@ -60,8 +60,10 @@ Page {
                 Text { anchors.centerIn: parent; text: "Перетащите файлы сюда или используйте 'Добавить файлы'" }
             }
             onDropped: {
-                var urls = drag.source.mimeData.urls
-                if (urls && urls.length > 0) addFilesFromUrls(urls)
+                if (drop.hasUrls) {
+                    var urls = drop.urls
+                    if (urls && urls.length > 0) addFilesFromUrls(urls)
+                }
             }
         }
 
