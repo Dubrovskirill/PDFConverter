@@ -26,26 +26,26 @@ Page {
 
         Row { spacing: 8 }
         Row { spacing: 8 }
-            Button {
-                text: "Добавить файлы"
-                onClicked: fileDialog.open()
-            }
-            CheckBox {
-                id: mergeCheckbox
-                text: "Объединить"
-            }
-            Button {
-                text: "Запустить"
-                onClicked: startProcessing()
-            }
-            Button {
-                text: "Отмена"
-                onClicked: appController.cancelAllJobs()
-            }
-            Button {
-                text: "Очистить список"
-                onClicked: { fileModel.clear(); pdfRenderQueue = [] }
-            }
+        Button {
+            text: "Добавить файлы"
+            onClicked: fileDialog.open()
+        }
+        CheckBox {
+            id: mergeCheckbox
+            text: "Объединить"
+        }
+        Button {
+            text: "Запустить"
+            onClicked: startProcessing()
+        }
+        Button {
+            text: "Отмена"
+            onClicked: appController.cancelAllJobs()
+        }
+        Button {
+            text: "Очистить список"
+            onClicked: { fileModel.clear(); pdfRenderQueue = [] }
+        }
 
         DropArea {
             id: dropArea
@@ -145,34 +145,43 @@ Page {
         }
     }
 
+
+
     function addFilesFromUrls(urls) {
         for (var i = 0; i < urls.length; ++i) {
             var u = urls[i]
             var local = toLocalPath(u)
-            var display = getDisplayName(local)
             var type = fileType(local)
+
+            if (type === "other") {
+                continue
+            }
+
+            var display = getDisplayName(local)
             var preview = ""
             fileModel.append({
-                "path": local,
-                "displayName": display,
-                "type": type,
-                "preview": preview,
-                "status": ""
-            })
+                                 "path": local,
+                                 "displayName": display,
+                                 "type": type,
+                                 "preview": preview,
+                                 "status": ""
+                             })
+
             if (type === "pdf") pdfRenderQueue.push(local)
             else if (type === "image") {
                 var itemIndex = fileModel.count - 1
                 fileModel.set(itemIndex, {
-                    "path": local,
-                    "displayName": display,
-                    "type": type,
-                    "preview": fileUrl(local),
-                    "status": ""
-                })
+                                  "path": local,
+                                  "displayName": display,
+                                  "type": type,
+                                  "preview": fileUrl(local),
+                                  "status": ""
+                              })
             }
         }
         if (!isRenderingPdf) renderNextPdf()
     }
+
 
     function renderNextPdf() {
         if (pdfRenderQueue.length === 0) {
@@ -192,12 +201,12 @@ Page {
                 var item = fileModel.get(i)
                 if (item.path === currentRenderingPath) {
                     fileModel.set(i, {
-                        "path": item.path,
-                        "displayName": item.displayName,
-                        "type": item.type,
-                        "preview": tempPreview,
-                        "status": item.status
-                    })
+                                      "path": item.path,
+                                      "displayName": item.displayName,
+                                      "type": item.type,
+                                      "preview": tempPreview,
+                                      "status": item.status
+                                  })
                     break
                 }
             }
@@ -249,7 +258,7 @@ Page {
 
     function fileType(path) {
         var ext = path.split(".").pop().toLowerCase()
-        if (["png","jpg","jpeg","bmp","gif"].indexOf(ext) !== -1) return "image"
+        if (["png","jpg","jpeg"].indexOf(ext) !== -1) return "image"
         if (ext === "pdf") return "pdf"
         if (ext === "doc" || ext === "docx") return "doc"
         return "other"
