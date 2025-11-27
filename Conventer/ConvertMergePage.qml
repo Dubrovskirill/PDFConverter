@@ -287,5 +287,15 @@ Page {
 
     function removeAt(idx) { fileModel.remove(idx) }
 
+    function moveUp(idx) {
+        if (idx <= 0) return
+        fileModel.move(idx, idx - 1, 1)
+    }
+
+    function moveDown(idx) {
+        if (idx >= fileModel.count - 1) return
+        fileModel.move(idx, idx + 1, 1)
+    }
+
 
 }
