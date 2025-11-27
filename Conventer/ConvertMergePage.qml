@@ -24,7 +24,6 @@ Page {
         anchors.margins: 12
         spacing: 8
 
-
         Row { spacing: 8 }
         Row { spacing: 8 }
             Button {
@@ -48,7 +47,6 @@ Page {
                 onClicked: { fileModel.clear(); pdfRenderQueue = [] }
             }
 
-
         DropArea {
             id: dropArea
             anchors.left: parent.left
@@ -67,7 +65,6 @@ Page {
             }
         }
 
-
         ListView {
             id: filesList
             anchors.left: parent.left
@@ -83,23 +80,25 @@ Page {
                         id: thumb
                         width: 64; height: 64
                         fillMode: Image.PreserveAspectFit
-
                         source: preview !== "" ? fileUrl(preview) : (type === "image" ? fileUrl(path) : (type === "pdf" ? iconPdf : iconDoc))
                     }
                     Column {
-                        width: parent.width - 260
+                        width: parent.width - 300
                         Text { elide: Text.ElideRight; text: displayName }
                         Text { color: "#666"; text: type + (status ? (" • " + status) : "") }
                     }
-                    Column { spacing: 6
-                        Button { text: "↑"; onClicked: moveUp(index) }
-                        Button { text: "↓"; onClicked: moveDown(index) }
+                    Row {
+                        spacing: 4
+                        Column {
+                            spacing: 6
+                            Button { text: "↑"; onClicked: moveUp(index) }
+                            Button { text: "↓"; onClicked: moveDown(index) }
+                        }
                         Button { text: "Удалить"; onClicked: removeAt(index) }
                     }
                 }
             }
         }
-
 
         Row {
             spacing: 8
@@ -117,17 +116,14 @@ Page {
         }
     }
 
-
     FileDialog {
         id: fileDialog
         title: "Выберите файлы"
         fileMode: FileDialog.OpenFiles
         onAccepted: {
-
             addFilesFromUrls(files)
         }
     }
-
 
     FileDialog {
         id: saveDialog
@@ -140,7 +136,6 @@ Page {
         }
     }
 
-
     FolderDialog {
         id: folderDialog
         title: "Выберите папку для результатов"
@@ -149,6 +144,137 @@ Page {
             startProcessingWithPath(outFolder)
         }
     }
+
+    function addFilesFromUrls(urls) {
+        for (var i = 0; i < urls.length; ++i) {
+            var u = urls[i]
+            var local = toLocalPath(u)
+            var display = getDisplayName(local)
+            var type = fileType(local)
+            var preview = ""
+            fileModel.append({
+                "path": local,
+                "displayName": display,
+                "type": type,
+                "preview": preview,
+                "status": ""
+            })
+            if (type === "pdf") pdfRenderQueue.push(local)
+            else if (type === "image") {
+                var itemIndex = fileModel.count - 1
+                fileModel.set(itemIndex, {
+                    "path": local,
+                    "displayName": display,
+                    "type": type,
+                    "preview": fileUrl(local),
+                    "status": ""
+                })
+            }
+        }
+        if (!isRenderingPdf) renderNextPdf()
+    }
+
+    function renderNextPdf() {
+        if (pdfRenderQueue.length === 0) {
+            isRenderingPdf = false
+            return
+        }
+        if (isRenderingPdf) return
+        isRenderingPdf = true
+        currentRenderingPath = pdfRenderQueue.shift()
+        appController.renderPdfPageToTempImage(currentRenderingPath, 1)
+    }
+
+    Connections {
+        target: appController
+        function onPreviewReady(tempPreview) {
+            for (var i = 0; i < fileModel.count; ++i) {
+                var item = fileModel.get(i)
+                if (item.path === currentRenderingPath) {
+                    fileModel.set(i, {
+                        "path": item.path,
+                        "displayName": item.displayName,
+                        "type": item.type,
+                        "preview": tempPreview,
+                        "status": item.status
+                    })
+                    break
+                }
+            }
+            isRenderingPdf = false
+            renderNextPdf()
+        }
+        function onProgressUpdated(value) { progressBar.value = value }
+        function onStatusUpdated(message) { statusLabel.text = message }
+        function onFilesMerged(success) {
+            if (success) {
+                statusLabel.text = "Готово: объединение завершено"
+                lastOutputPath = pendingOutputTemp
+                openFolderBtn.enabled = true
+            } else statusLabel.text = "Ошибка при объединении"
+        }
+        function onImagesConverted(success) {
+            if (success) {
+                statusLabel.text = "Готово: конвертация изображений завершена"
+                openFolderBtn.enabled = true
+            } else statusLabel.text = "Ошибка при конвертации изображений"
+        }
+        function onDocConverted(success) {
+            statusLabel.text = success ? "Готово: DOC сконвертирован" : "Ошибка при конвертации DOC"
+        }
+    }
+
+    function toLocalPath(url) {
+        if (!url) return ""
+        var s = (typeof url === "string") ? url : url.toString()
+        if (s.indexOf("file:///") === 0) return s.replace("file:///", "")
+        if (s.indexOf("file://") === 0) return s.replace("file://", "")
+        if (s.indexOf("file:") === 0) return s.replace("file:", "")
+        return s
+    }
+
+    function fileUrl(path) {
+        if (!path) return ""
+        var p = path.toString().replace(/\\/g, "/")
+        if (p.indexOf("file:///") === 0) return p
+        return "file:///" + p
+    }
+
+    function getDisplayName(path) {
+        var s = path.replace(/\\/g, "/")
+        var idx = s.lastIndexOf("/")
+        if (idx >= 0) return s.substring(idx + 1)
+        return s
+    }
+
+    function fileType(path) {
+        var ext = path.split(".").pop().toLowerCase()
+        if (["png","jpg","jpeg","bmp","gif"].indexOf(ext) !== -1) return "image"
+        if (ext === "pdf") return "pdf"
+        if (ext === "doc" || ext === "docx") return "doc"
+        return "other"
+    }
+
+    function getOutputFolder(path) {
+        if (!path) return ""
+        var p = path.replace("file:///", "").replace(/\\/g, "/")
+        if (p.match(/\.pdf$/i)) {
+            var idx = p.lastIndexOf("/")
+            if (idx >= 0) return p.substr(0, idx)
+            return p
+        }
+        return p
+    }
+
+    function getPathsInOrder() {
+        var arr = []
+        for (var i = 0; i < fileModel.count; ++i)
+            arr.push(fileModel.get(i).path)
+        return arr
+    }
+
+
+    function removeAt(idx) { fileModel.remove(idx) }
 
 
 }
